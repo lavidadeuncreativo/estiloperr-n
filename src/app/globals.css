@@ -2,26 +2,272 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================
+   ESTILO PERRÓN — Global Design System
+   ============================================ */
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --brand-sky-blue: 85 104 175;
+    --brand-aqua: 206 238 174;
+    --brand-lime: 205 214 41;
+    --brand-rose: 236 23 99;
+    --brand-blush: 248 201 221;
+    --brand-sunset: 243 120 38;
+    --neutral-offwhite: 247 244 239;
+    --neutral-stone: 232 225 216;
+    --neutral-near-black: 17 17 17;
+    --neutral-charcoal: 43 43 43;
+    --neutral-soft-gray: 140 140 140;
+    --neutral-surface-gray: 245 245 243;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply font-inter text-neutral-near-black bg-neutral-offwhite;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-nohemi;
+  }
+
+  ::selection {
+    background: rgba(236, 23, 99, 0.15);
+    color: #111111;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Pill Button Variants */
+  .btn-pill {
+    @apply inline-flex items-center justify-center gap-2 
+           rounded-pill font-nohemi font-semibold
+           transition-all duration-hover ease-brand
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+
+  .btn-pill-lg {
+    @apply btn-pill px-8 py-4 text-body-lg;
+  }
+
+  .btn-pill-md {
+    @apply btn-pill px-6 py-3 text-body;
+  }
+
+  .btn-pill-sm {
+    @apply btn-pill px-4 py-2 text-small;
+  }
+
+  .btn-primary {
+    @apply bg-brand-rose text-white 
+           hover:bg-brand-rose/90 hover:scale-[1.02] hover:shadow-card
+           active:scale-[0.98]
+           focus-visible:ring-brand-rose;
+  }
+
+  .btn-secondary {
+    @apply bg-neutral-near-black text-white 
+           hover:bg-neutral-charcoal hover:scale-[1.02] hover:shadow-card
+           active:scale-[0.98]
+           focus-visible:ring-neutral-near-black;
+  }
+
+  .btn-outline {
+    @apply bg-transparent border-2 border-neutral-near-black text-neutral-near-black
+           hover:bg-neutral-near-black hover:text-white hover:scale-[1.02]
+           active:scale-[0.98]
+           focus-visible:ring-neutral-near-black;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent text-neutral-near-black
+           hover:bg-neutral-near-black/5
+           active:scale-[0.98]
+           focus-visible:ring-neutral-near-black;
+  }
+
+  .btn-sunset {
+    @apply bg-brand-sunset text-white
+           hover:bg-brand-sunset/90 hover:scale-[1.02] hover:shadow-card
+           active:scale-[0.98]
+           focus-visible:ring-brand-sunset;
+  }
+
+  .btn-lime {
+    @apply bg-brand-lime text-neutral-near-black
+           hover:bg-brand-lime/90 hover:scale-[1.02] hover:shadow-card
+           active:scale-[0.98]
+           focus-visible:ring-brand-lime;
+  }
+
+  /* Section Containers */
+  .section-rounded {
+    @apply rounded-xl-brand overflow-hidden;
+  }
+
+  .section-container {
+    @apply max-w-container mx-auto px-5 md:px-8 lg:px-14;
+  }
+
+  /* Product Card */
+  .product-card {
+    @apply relative rounded-lg-brand overflow-hidden bg-white
+           transition-all duration-hover ease-brand
+           hover:shadow-card hover:-translate-y-1;
+  }
+
+  .product-card-image {
+    @apply aspect-square w-full object-cover 
+           transition-transform duration-300 ease-brand
+           group-hover:scale-105;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center rounded-pill px-3 py-1 
+           text-caption font-semibold font-nohemi uppercase tracking-wide;
+  }
+
+  .badge-new {
+    @apply badge bg-brand-lime text-neutral-near-black;
+  }
+
+  .badge-sale {
+    @apply badge bg-brand-rose text-white;
+  }
+
+  .badge-featured {
+    @apply badge bg-brand-sunset text-white;
+  }
+
+  /* Admin-specific */
+  .admin-card {
+    @apply bg-white rounded-lg-brand border border-neutral-stone/40 p-6
+           shadow-soft;
+  }
+
+  .admin-stat-card {
+    @apply admin-card flex flex-col gap-2;
+  }
+
+  .admin-table {
+    @apply w-full text-left;
+  }
+
+  .admin-table th {
+    @apply px-4 py-3 text-meta font-semibold text-neutral-soft-gray uppercase tracking-wider
+           border-b border-neutral-stone/30;
+  }
+
+  .admin-table td {
+    @apply px-4 py-3.5 text-small border-b border-neutral-stone/20;
+  }
+
+  .admin-table tr:hover td {
+    @apply bg-neutral-surface-gray/50;
+  }
+
+  /* Stock Semaphore */
+  .stock-ok {
+    @apply inline-flex items-center gap-1.5 text-emerald-600;
+  }
+
+  .stock-low {
+    @apply inline-flex items-center gap-1.5 text-amber-500;
+  }
+
+  .stock-out {
+    @apply inline-flex items-center gap-1.5 text-red-500;
+  }
+
+  /* Status Badges */
+  .status-pending {
+    @apply badge bg-amber-100 text-amber-800;
+  }
+
+  .status-paid {
+    @apply badge bg-emerald-100 text-emerald-800;
+  }
+
+  .status-preparation {
+    @apply badge bg-blue-100 text-blue-800;
+  }
+
+  .status-shipped {
+    @apply badge bg-purple-100 text-purple-800;
+  }
+
+  .status-delivered {
+    @apply badge bg-emerald-100 text-emerald-800;
+  }
+
+  .status-cancelled {
+    @apply badge bg-red-100 text-red-800;
+  }
+
+  /* Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-neutral-stone rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-neutral-soft-gray;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .animate-section-reveal {
+    animation: sectionReveal 0.6s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes sectionReveal {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Hide scrollbar on horizontal scroll containers */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
