@@ -52,9 +52,6 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
           )}
         </div>
-        {product.personalization_enabled && (
-          <p className="text-caption text-brand-rose font-medium mt-1.5">✨ Personalizable</p>
-        )}
       </div>
     </Link>
   );

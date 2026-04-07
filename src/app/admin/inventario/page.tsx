@@ -3,23 +3,26 @@ import Image from 'next/image';
 import { useDataStore } from '@/lib/data/store';
 import { formatPrice, getStockStatus } from '@/lib/utils';
 import { Search, Minus } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 export default function AdminInventoryPage() {
-  const products = useDataStore(s => s.products.filter(p => !p.is_archived));
+  const allProductsRaw = useDataStore(s => s.products);
+  const products = useMemo(() => allProductsRaw.filter(p => !p.is_archived), [allProductsRaw]);
   const variants = useDataStore(s => s.productVariants);
   const getProductPrimaryImage = useDataStore(s => s.getProductPrimaryImage);
   const updateVariant = useDataStore(s => s.updateVariant);
   const [search, setSearch] = useState('');
 
-  const allVariants = variants.map(v => {
-    const product = products.find(p => p.id === v.product_id);
-    return { ...v, product };
-  }).filter(v => v.product && (!search || v.product!.title.toLowerCase().includes(search.toLowerCase()) || v.sku.toLowerCase().includes(search.toLowerCase())));
+  const allVariants = useMemo(() => {
+    return variants.map(v => {
+      const product = products.find(p => p.id === v.product_id);
+      return { ...v, product };
+    }).filter(v => v.product && (!search || v.product!.title.toLowerCase().includes(search.toLowerCase()) || v.sku.toLowerCase().includes(search.toLowerCase())));
+  }, [variants, products, search]);
 
-  const totalStock = allVariants.reduce((s, v) => s + v.stock, 0);
-  const lowCount = allVariants.filter(v => v.stock > 0 && v.stock <= v.low_stock_threshold).length;
-  const outCount = allVariants.filter(v => v.stock <= 0).length;
+  const totalStock = useMemo(() => allVariants.reduce((s, v) => s + v.stock, 0), [allVariants]);
+  const lowCount = useMemo(() => allVariants.filter(v => v.stock > 0 && v.stock <= v.low_stock_threshold).length, [allVariants]);
+  const outCount = useMemo(() => allVariants.filter(v => v.stock <= 0).length, [allVariants]);
 
   return (
     <div className="space-y-6">

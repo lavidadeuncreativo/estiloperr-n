@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useDataStore } from '@/lib/data/store';
 import { ProductCard } from '@/components/storefront/ProductCard';
-import { ArrowRight, Truck, Heart, Shield } from 'lucide-react';
+import { ArrowRight, Truck, Heart, Shield, Star, PawPrint } from 'lucide-react';
 import { useState } from 'react';
 
 // ---- Section Reveal Hook ----
@@ -66,8 +66,10 @@ function HeroSection() {
               />
             )}
             {/* Playful annotation */}
-            <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur-sm rounded-xl-brand px-4 py-2.5 shadow-card">
-              <p className="font-nohemi text-meta font-bold text-brand-rose">¡Hola! Soy modelo 🐾</p>
+            <div className="absolute bottom-8 left-8 bg-white/90 backdrop-blur-sm rounded-xl-brand px-4 py-2.5 shadow-card animate-bounce-subtle">
+              <p className="font-nohemi text-meta font-bold text-brand-rose">
+                ¡Hola! Soy <span className="inline-block animate-text-slide">Latte</span> 🐾
+              </p>
             </div>
           </div>
         </div>
@@ -76,28 +78,38 @@ function HeroSection() {
   );
 }
 
-// ---- TRUST STRIP ----
+// ---- TRUST STRIP (TICKER) ----
 function TrustStrip() {
-  const features = [
-    { icon: <Truck size={22} />, label: 'Envío gratis desde $999' },
-    { icon: <Heart size={22} />, label: 'Donamos por cada compra' },
-    { icon: <Shield size={22} />, label: 'Hecho en México 🇲🇽' },
+  const items = [
+    { icon: <Truck size={18} />, label: 'Envío gratis desde $999' },
+    { icon: <Heart size={18} />, label: 'Donamos por cada compra' },
+    { icon: <Shield size={18} />, label: 'Hecho en México 🇲🇽' },
+    { icon: <Star size={18} />, label: 'Sustentable y Local' },
+    { icon: <PawPrint size={18} />, label: 'Comunidad +1.5k perrhijos' },
   ];
 
+  // Double the items for seamless loop
+  const displayItems = [...items, ...items, ...items];
+
   return (
-    <section className="section-container py-8 md:py-12">
-      <div className="text-center mb-6">
+    <section className="py-10 overflow-hidden bg-white border-y border-neutral-stone/10">
+      <div className="text-center mb-8 px-6">
         <p className="font-nohemi text-h3 md:text-h2 font-bold text-neutral-near-black">
           Para perritos con un estilo... <span className="text-brand-rose italic">bien perrón</span>
         </p>
       </div>
-      <div className="flex flex-wrap justify-center gap-6 md:gap-12">
-        {features.map((f, i) => (
-          <div key={i} className="flex items-center gap-3 text-neutral-charcoal">
-            <div className="p-2.5 bg-brand-blush/40 rounded-pill text-brand-rose">{f.icon}</div>
-            <span className="font-inter text-small font-medium">{f.label}</span>
-          </div>
-        ))}
+      
+      <div className="relative flex overflow-x-hidden group">
+        <div className="animate-ticker flex whitespace-nowrap gap-12 md:gap-24 items-center py-4">
+          {displayItems.map((f, i) => (
+            <div key={i} className="flex items-center gap-4 text-neutral-charcoal shrink-0">
+              <div className="p-2.5 bg-brand-blush/40 rounded-full text-brand-rose">
+                {f.icon}
+              </div>
+              <span className="font-nohemi text-body font-bold tracking-tight uppercase">{f.label}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -107,11 +119,15 @@ function TrustStrip() {
 function ProductMosaic() {
   const ref = useSectionReveal();
   const [filter, setFilter] = useState<'all' | 'new' | 'favorites'>('all');
-  const products = useDataStore(s => s.products);
-  const allProducts = useMemo(() => products.filter(p => p.is_visible && !p.is_archived), [products]);
-  const newProducts = useMemo(() => products.filter(p => p.is_new && p.is_visible && !p.is_archived), [products]);
-  const favProducts = useMemo(() => products.filter(p => p.is_favorite && p.is_visible && !p.is_archived), [products]);
-  const displayed = filter === 'new' ? newProducts : filter === 'favorites' ? favProducts : allProducts;
+  const allProductsRaw = useDataStore(s => s.products);
+  const allProducts = useMemo(() => allProductsRaw.filter(p => p.is_visible && !p.is_archived), [allProductsRaw]);
+  const newProducts = useMemo(() => allProductsRaw.filter(p => p.is_new && p.is_visible && !p.is_archived), [allProductsRaw]);
+  const favProducts = useMemo(() => allProductsRaw.filter(p => p.is_favorite && p.is_visible && !p.is_archived), [allProductsRaw]);
+  const displayed = useMemo(() => {
+    if (filter === 'new') return newProducts;
+    if (filter === 'favorites') return favProducts;
+    return allProducts;
+  }, [filter, allProducts, newProducts, favProducts]);
   const filters = [
     { id: 'all' as const, label: 'Todo' },
     { id: 'new' as const, label: 'Lo más nuevo' },
@@ -222,9 +238,9 @@ function CampaignBlock({ blockId }: { blockId: string }) {
 // ---- FEATURED PRODUCTS ----
 function FeaturedProducts() {
   const ref = useSectionReveal();
-  const products = useDataStore(s => s.products);
-  const newProducts = useMemo(() => products.filter(p => p.is_new && p.is_visible && !p.is_archived), [products]);
-  const featured = useMemo(() => products.filter(p => p.is_featured && p.is_visible && !p.is_archived), [products]);
+  const allProductsRaw = useDataStore(s => s.products);
+  const newProducts = useMemo(() => allProductsRaw.filter(p => p.is_new && p.is_visible && !p.is_archived), [allProductsRaw]);
+  const featured = useMemo(() => allProductsRaw.filter(p => p.is_featured && p.is_visible && !p.is_archived), [allProductsRaw]);
   const displayed = newProducts.length > 0 ? newProducts : featured;
 
   return (
@@ -273,17 +289,84 @@ function DogRegistrationCTA() {
   );
 }
 
+// ---- COLLECTION SLIDER ----
+function CollectionSlider({ collectionId, title, subtitle }: { collectionId: string, title: string, subtitle?: string }) {
+  const ref = useSectionReveal();
+  const allProductsRaw = useDataStore(s => s.products);
+  const products = useMemo(() => 
+    allProductsRaw.filter(p => p.collection_id === collectionId && p.is_visible && !p.is_archived),
+    [allProductsRaw, collectionId]
+  );
+  const sliderRef = useRef<HTMLDivElement>(null);
+
+  if (products.length === 0) return null;
+
+  return (
+    <section ref={ref} className="section-container py-12 md:py-16 opacity-0">
+      <div className="flex items-end justify-between mb-8">
+        <div className="max-w-2xl">
+          <h2 className="font-nohemi text-h2 font-extrabold text-neutral-near-black">{title}</h2>
+          {subtitle && <p className="text-body text-neutral-soft-gray mt-2">{subtitle}</p>}
+        </div>
+        <Link href={`/colecciones/${collectionId}`} className="hidden md:flex items-center gap-2 btn-pill-sm btn-ghost font-nohemi group">
+          Ver colección <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </div>
+      
+      <div className="relative">
+        <div 
+          ref={sliderRef}
+          className="flex overflow-x-auto gap-4 md:gap-6 pb-8 custom-scrollbar scroll-smooth snap-x"
+        >
+          {products.map(product => (
+            <div key={product.id} className="min-w-[280px] md:min-w-[320px] snap-start">
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+        <div className="md:hidden mt-4 text-center">
+            <p className="text-caption text-neutral-soft-gray italic">Desliza para ver más 🐾</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ---- HOMEPAGE ----
 export default function HomePage() {
+  const homepageBlocks = useDataStore(s => s.homepageBlocks);
+  const sortedBlocks = useMemo(() => 
+    [...homepageBlocks]
+      .filter(b => b.is_visible)
+      .sort((a, b) => a.position - b.position),
+    [homepageBlocks]
+  );
+
   return (
     <>
-      <HeroSection />
-      <TrustStrip />
-      <ProductMosaic />
-      <CampaignBlock blockId="hb-5" />
-      <CampaignBlock blockId="hb-6" />
-      <FeaturedProducts />
-      <DogRegistrationCTA />
+      {sortedBlocks.map(block => {
+        switch (block.block_type) {
+          case 'hero':
+            return <HeroSection key={block.id} />;
+          case 'promo_strip':
+            // PromoStrip is handled in Layout, but we could render others here if needed
+            return null;
+          case 'trust_strip':
+            return <TrustStrip key={block.id} />;
+          case 'product_mosaic':
+            return <ProductMosaic key={block.id} />;
+          case 'campaign':
+            return <CampaignBlock key={block.id} blockId={block.id} />;
+          case 'featured_products':
+            return <FeaturedProducts key={block.id} />;
+          case 'dog_registration_cta':
+            return <DogRegistrationCTA key={block.id} />;
+          default:
+            return null;
+        }
+      })}
+
+      {/* Collection Sliders are now dynamic blocks handled above */}
     </>
   );
 }

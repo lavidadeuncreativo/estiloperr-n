@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useDataStore } from '@/lib/data/store';
@@ -7,7 +7,8 @@ import { formatPrice } from '@/lib/utils';
 import { Search, Plus, Edit, Eye, EyeOff, Star, Sparkles } from 'lucide-react';
 
 export default function AdminProductsPage() {
-  const products = useDataStore(s => s.products.filter(p => !p.is_archived));
+  const allProductsRaw = useDataStore(s => s.products);
+  const products = useMemo(() => allProductsRaw.filter(p => !p.is_archived), [allProductsRaw]);
   const collections = useDataStore(s => s.collections);
   const getProductPrimaryImage = useDataStore(s => s.getProductPrimaryImage);
   const getProductVariants = useDataStore(s => s.getProductVariants);

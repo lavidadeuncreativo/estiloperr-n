@@ -1,14 +1,14 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingBag, Heart, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Menu, X, User } from 'lucide-react';
 import { useCartStore } from '@/lib/data/store';
 import { cn } from '@/lib/utils';
 
 const navLinks = [
   { label: 'Tienda', href: '/tienda' },
   { label: 'Historia', href: '/historia' },
-  { label: 'Adopta un amigo', href: '/registra-a-tu-perrhijo' },
+  { label: 'Adopta un amigo', href: '/adopta-un-amigo' },
 ];
 
 export function Navbar() {

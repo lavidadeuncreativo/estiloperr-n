@@ -75,6 +75,7 @@ interface DataStore {
   addPromotion: (promotion: Promotion) => void;
   addCoupon: (coupon: Coupon) => void;
   addDogProfile: (profile: DogProfile) => void;
+  removeDogProfile: (id: string) => void;
   addOrder: (order: Order, items: OrderItem[]) => void;
 }
 
@@ -185,7 +186,12 @@ export const useDataStore = create<DataStore>()(
       })),
       addPromotion: (promotion) => set(state => ({ promotions: [...state.promotions, promotion] })),
       addCoupon: (coupon) => set(state => ({ coupons: [...state.coupons, coupon] })),
-      addDogProfile: (profile) => set(state => ({ dogProfiles: [...state.dogProfiles, profile] })),
+      addDogProfile: (profile) => set(state => ({
+        dogProfiles: [...state.dogProfiles, profile]
+      })),
+      removeDogProfile: (id) => set(state => ({
+        dogProfiles: state.dogProfiles.filter(p => p.id !== id)
+      })),
       addOrder: (order, items) => set(state => ({
         orders: [...state.orders, order],
         orderItems: [...state.orderItems, ...items],

@@ -8,10 +8,10 @@ export function PromoStrip() {
 
   return (
     <div
-      className="w-full py-2.5 text-center"
-      style={{ backgroundColor: strip.bg_color || '#5568AF', color: strip.text_color || '#FFFFFF' }}
+      className="w-full py-2.5 text-center bg-holographic shadow-nav px-4"
+      style={{ color: strip.text_color || '#FFFFFF' }}
     >
-      <p className="font-nohemi text-caption md:text-small font-medium tracking-wide">
+      <p className="font-nohemi text-caption md:text-small font-bold tracking-[0.15em] uppercase">
         {strip.title}
       </p>
     </div>
