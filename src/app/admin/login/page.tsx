@@ -1,8 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogIn, User, Lock, Mail, ArrowRight } from 'lucide-react';
-import Image from 'next/image';
+import { Lock, Mail, ArrowRight } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');

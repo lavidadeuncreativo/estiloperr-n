@@ -289,49 +289,6 @@ function DogRegistrationCTA() {
   );
 }
 
-// ---- COLLECTION SLIDER ----
-function CollectionSlider({ collectionId, title, subtitle }: { collectionId: string, title: string, subtitle?: string }) {
-  const ref = useSectionReveal();
-  const allProductsRaw = useDataStore(s => s.products);
-  const products = useMemo(() => 
-    allProductsRaw.filter(p => p.collection_id === collectionId && p.is_visible && !p.is_archived),
-    [allProductsRaw, collectionId]
-  );
-  const sliderRef = useRef<HTMLDivElement>(null);
-
-  if (products.length === 0) return null;
-
-  return (
-    <section ref={ref} className="section-container py-12 md:py-16 opacity-0">
-      <div className="flex items-end justify-between mb-8">
-        <div className="max-w-2xl">
-          <h2 className="font-nohemi text-h2 font-extrabold text-neutral-near-black">{title}</h2>
-          {subtitle && <p className="text-body text-neutral-soft-gray mt-2">{subtitle}</p>}
-        </div>
-        <Link href={`/colecciones/${collectionId}`} className="hidden md:flex items-center gap-2 btn-pill-sm btn-ghost font-nohemi group">
-          Ver colección <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-        </Link>
-      </div>
-      
-      <div className="relative">
-        <div 
-          ref={sliderRef}
-          className="flex overflow-x-auto gap-4 md:gap-6 pb-8 custom-scrollbar scroll-smooth snap-x"
-        >
-          {products.map(product => (
-            <div key={product.id} className="min-w-[280px] md:min-w-[320px] snap-start">
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-        <div className="md:hidden mt-4 text-center">
-            <p className="text-caption text-neutral-soft-gray italic">Desliza para ver más 🐾</p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // ---- HOMEPAGE ----
 export default function HomePage() {
   const homepageBlocks = useDataStore(s => s.homepageBlocks);

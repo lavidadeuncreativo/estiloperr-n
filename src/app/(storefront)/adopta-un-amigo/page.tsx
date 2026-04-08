@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, PawPrint, Home, Gift, ExternalLink, ArrowRight } from 'lucide-react';
+import { Heart, PawPrint, Home, Gift } from 'lucide-react';
 import { useRef, useEffect } from 'react';
 
 function useReveal() {
@@ -79,7 +79,7 @@ export default function AdoptaUnAmigoPage() {
                   <strong>Una Huella a la Vez</strong> es el proyecto social detrás de cada prenda: nuestra misión de rescatar y rehabilitar perros abandonados.
                 </p>
                 <div className="bg-brand-blush/30 p-8 rounded-xl-brand border-l-4 border-brand-rose italic">
-                  "Nuestra visión a largo plazo es que un porcentaje de las ventas de Estilo Perrón contribuya directamente al rescate y cuidado de perros en situación de calle."
+                  &quot;Nuestra visión a largo plazo es que un porcentaje de las ventas de Estilo Perrón contribuya directamente al rescate y cuidado de perros en situación de calle.&quot;
                 </div>
               </div>
             </div>
